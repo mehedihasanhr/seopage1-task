@@ -19,7 +19,7 @@ export const AccordionItem = ({ title, children }) => {
       </div>
       <div
         className={`flex flex-col gap-4 ${
-          open ? 'h-[600px] shadow-lg rounded-b-lg pb-8' : 'h-0 overflow-hidden'
+          open ? 'h-[450px] shadow-lg rounded-b-lg pb-8' : 'h-0 overflow-hidden'
         } transition-all duration-150`}
       >
         {children}

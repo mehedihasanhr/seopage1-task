@@ -6,21 +6,17 @@ import dynamic from 'next/dynamic';
 const CustomScrollbar = dynamic(() => import('./CustomScrollbar'), { ssr: false });
 
 const AccordionContentItem = ({ text, index, time, date }) => {
-  const { isExpended, setIsExpended } = React.useContext(AccordionCxt);
-  const [expend, setExpend] = useState(false);
+  const { modal, open, close } = React.useContext(AccordionCxt);
   const ref = React.useRef(null);
+
+  const expend = modal.isOpen;
 
   const handleExpend = (e) => {
     e.preventDefault();
-    setExpend(true);
-    setIsExpended(true);
+    open({ text, index, time, date });
   };
 
-  const close = () => {
-    setExpend(false);
-    setIsExpended(false);
-  };
-
+  // control outside click
   React.useEffect(() => {
     let timeout;
 
@@ -32,7 +28,7 @@ const AccordionContentItem = ({ text, index, time, date }) => {
       }
     };
 
-    if (expend && isExpended) {
+    if (expend) {
       timeout = setTimeout(() => {
         window.addEventListener('click', handleOutsideClick);
       }, 300);
@@ -45,8 +41,8 @@ const AccordionContentItem = ({ text, index, time, date }) => {
   }, [expend]);
 
   return (
-    <div ref={ref} className={`relative ${isExpended && !expend ? 'opacity-40' : ''}`}>
-      <div className={`flex flex-col gap-4 bg-white ${expend ? 'p-3 shadow-xl mx-3 rounded-b-lg z-[10]' : ''}`}>
+    <div ref={ref} className={`relative `}>
+      <div className={`flex flex-col gap-4 bg-white`}>
         <>
           <CustomScrollbar minH={100} maxH={350}>
             <div className="px-4 text-sm">
@@ -59,21 +55,13 @@ const AccordionContentItem = ({ text, index, time, date }) => {
                   </div>
                 </div>
               ) : null}
-              {expend ? text : text.slice(0, 700)}
-              {expend ? null : (
-                <Link href="/" className="text-blue-500 ml-2" onClick={handleExpend}>
-                  Read full guideline
-                </Link>
-              )}
+              {text.slice(0, 700)}
+              <Link href="/" className="text-blue-500 ml-2" onClick={handleExpend}>
+                Read full guideline
+              </Link>
             </div>
           </CustomScrollbar>
         </>
-
-        {expend ? (
-          <Button className="border-none bg-blue-50 text-blue-500 w-fit ml-auto" onClick={close}>
-            Close
-          </Button>
-        ) : null}
       </div>
     </div>
   );
