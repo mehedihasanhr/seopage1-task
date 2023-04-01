@@ -5,14 +5,15 @@ import TaskActions from './TaskActions';
 import GeneralGuideLine from './GeneralGuideLine';
 import Accordion, { AccordionItem } from './Accordion';
 import Link from 'next/link';
-import AccordionContent from './AccordionContent';
 import PerfectScrollbar from 'react-perfect-scrollbar';
+import AccordionContents from './AccordionContents';
+import AccordionContentItem from './AccordionContentItem';
 
 const Item = ({ title, children }) => {
   return (
-    <div className="flex items-center">
-      <div className="w-32 text-[#777777]">{title}</div>
-      <div>{children}</div>
+    <div className="flex md:items-center flex-col md:flex-row space-x-0 space-y-4 md:space-y-0 md:space-x-4">
+      <div className="w-32 text-[#777777] whitespace-nowrap">{title}</div>
+      <div className="w-full pl-2.5 md:pl-0">{children}</div>
     </div>
   );
 };
@@ -67,7 +68,7 @@ const TaskDetails = () => {
       {/* details */}
       <div className="grid grid-cols-12 gap-3 ">
         {/* cols */}
-        <div className="col-span-12 md:col-span-9">
+        <div className="col-span-12 md:col-span-8">
           <div className="bg-white rounded-lg pb-4">
             {/* buttons groups */}
             <div className="flex items-center gap-3 p-4 border-b-2 border-[#E7EFFC]">
@@ -100,7 +101,7 @@ const TaskDetails = () => {
                       <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
                       <path d="M5 6.5A1.5 1.5 0 0 1 6.5 5h3A1.5 1.5 0 0 1 11 6.5v3A1.5 1.5 0 0 1 9.5 11h-3A1.5 1.5 0 0 1 5 9.5v-3z" />
                     </svg>
-                    <span className="hidden md:block text-[#4E4E4E] font-medium"> Stop Timer </span>
+                    <span className="hidden lg:block text-[#4E4E4E] font-medium"> Stop Timer </span>
                   </Button>
                 </>
               ) : (
@@ -115,7 +116,7 @@ const TaskDetails = () => {
                         transform="translate(-320 -293)"
                       />
                     </svg>
-                    <span className="hidden md:block"> Start Timer </span>
+                    <span className="hidden lg:block"> Start Timer </span>
                   </Button>
                   {/* complete */}
                   <Button>
@@ -128,7 +129,7 @@ const TaskDetails = () => {
                       />
                     </svg>
 
-                    <span className="hidden md:block"> Make As Complete</span>
+                    <span className="hidden lg:block"> Make As Complete</span>
                   </Button>
                 </>
               )}
@@ -142,7 +143,7 @@ const TaskDetails = () => {
                     transform="translate(-200 -296)"
                   />
                 </svg>
-                <span className="hidden md:block"> Request Time Extension</span>
+                <span className="hidden lg:block"> Request Time Extension</span>
               </Button>
 
               <Button className="border-0 ml-auto">
@@ -225,57 +226,139 @@ const TaskDetails = () => {
 
             {/* task description */}
             <div className="p-4 flex flex-col gap-4">
-              <GeneralGuideLine />
+              <GeneralGuideLine title="General Guideline" />
 
               <Accordion>
                 <AccordionItem title="Task Description">
-                  <div className="py-3">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi ab repellat facere ipsam, accusantium
-                    deserunt molestiae? Rerum nesciunt autem temporibus facilis dicta. Molestias quo assumenda omnis
-                    esse tempore totam atque. Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi ab repellat
-                    facere ipsam, accusantium deserunt molestiae? Rerum nesciunt autem temporibus facilis dicta.
-                    Molestias quo assumenda omnis esse tempore totam atque. Lorem ipsum dolor sit amet consectetur
-                    adipisicing elit. Nisi ab repellat facere ipsam, accusantium deserunt molestiae? Rerum nesciunt
-                    autem temporibus facilis dicta. Molestias quo assumenda omnis esse tempore totam atque. Lorem ipsum
-                    dolor sit amet consectetur adipisicing elit. Nisi ab repellat facere ipsam, accusantium deserunt
-                    molestiae? Rerum nesciunt autem temporibus facilis dicta. Molestias quo assumenda omnis esse tempore
-                    totam atque.
-                    <Link href="/" className="text-blue-500 ml-2">
-                      Read full guideline
-                    </Link>
-                  </div>
-                </AccordionItem>
-              </Accordion>
-
-              <Accordion>
-                <AccordionItem title="Task Revision from User" className="overflow-x-hidden">
-                  <PerfectScrollbar>
-                    <AccordionContent>
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi ab repellat facere ipsam,
+                  <AccordionContents>
+                    <AccordionContentItem
+                      index={1}
+                      date="01-04-23"
+                      time="11:22 AM"
+                      text=" Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi ab repellat facere ipsam,
                       accusantium deserunt molestiae? Rerum nesciunt autem temporibus facilis dicta. Molestias quo
                       assumenda omnis esse tempore totam atque. Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                      Nisi ab repellat facere ipsam, accusantium deserunt molestiae? Rerum nesciunt autem temporibus
+                      Nisi ab repellat facere ipsam, accusantium deserunt molestiae? repellat facere ipsam, accusantium deserunt molestiae? Rerum nesciunt autem temporibus
                       facilis dicta. Molestias quo assumenda omnis esse tempore totam atque. Lorem ipsum dolor sit amet
                       consectetur adipisicing elit. Nisi ab repellat facere ipsam, accusantium deserunt molestiae? Rerum
                       nesciunt autem temporibus facilis dicta. Molestias quo assumenda omnis esse tempore totam atque.
                       Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi ab repellat facere ipsam,
                       accusantium deserunt molestiae? Rerum nesciunt autem temporibus facilis dicta. Molestias quo
-                      assumenda omnis esse tempore totam atque.ibus facilis dicta. Molestias quo assumenda omnis esse
-                      tempore totam atque. Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi ab repellat
-                      facere ipsam, accusantium deserunt molestiae? Rerum nesciunt autem temporibus facilis dicta.
-                      Molestias quo assumenda omnis esse tempore totam atque. ibus facilis dicta. Molestias quo
+                      assumenda omnis esse tempore totam atque. repellat facere ipsam, accusantium deserunt molestiae? Rerum nesciunt autem temporibus
+                      facilis dicta. Molestias quo assumenda omnis esse tempore totam atque. Lorem ipsum dolor sit amet
+                      consectetur adipisicing elit. Nisi ab repellat facere ipsam, accusantium deserunt molestiae? Rerum
+                      nesciunt autem temporibus facilis dicta. Molestias quo assumenda omnis esse tempore totam atque.
+                      Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi ab repellat facere ipsam,
+                      accusantium deserunt molestiae? Rerum nesciunt autem temporibus facilis dicta. Molestias quo
+                      assumenda omnis esse tempore totam atque. Rerum nesciunt autem temporibus
+                      facilis dicta. Molestias quo assumenda omnis esse tempore totam atque. Lorem ipsum dolor sit amet
+                      consectetur adipisicing elit. Nisi ab repellat facere ipsam, accusantium deserunt molestiae? Rerum
+                      nesciunt autem temporibus facilis dicta. Molestias quo assumenda omnis esse tempore totam atque.
+                      Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi ab repellat facere ipsam,
+                      accusantium deserunt molestiae? Rerum nesciunt autem temporibus facilis dicta. Molestias quo
+                      assumenda omnis esse tempore totam atque."
+                    />
+
+                    <AccordionContentItem
+                      index={2}
+                      date="01-04-23"
+                      time="11:22 AM"
+                      text=" Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi ab repellat facere ipsam,
+                      accusantium deserunt molestiae? Rerum nesciunt autem temporibus facilis dicta. Molestias quo
                       assumenda omnis esse tempore totam atque. Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                      Nisi ab repellat facere ipsam, accusantium deserunt molestiae? totam atque.
-                    </AccordionContent>
-                  </PerfectScrollbar>
+                      Nisi ab repellat facere ipsam, accusantium deserunt molestiae? repellat facere ipsam, accusantium deserunt molestiae? Rerum nesciunt autem temporibus
+                      facilis dicta. Molestias quo assumenda omnis esse tempore totam atque. Lorem ipsum dolor sit amet
+                      consectetur adipisicing elit. Nisi ab repellat facere ipsam, accusantium deserunt molestiae? Rerum
+                      nesciunt autem temporibus facilis dicta. Molestias quo assumenda omnis esse tempore totam atque.
+                      Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi ab repellat facere ipsam,
+                      accusantium deserunt molestiae? Rerum nesciunt autem temporibus facilis dicta. Molestias quo
+                      assumenda omnis esse tempore totam atque. repellat facere ipsam, accusantium deserunt molestiae? Rerum nesciunt autem temporibus
+                      facilis dicta. Molestias quo assumenda omnis esse tempore totam atque. Lorem ipsum dolor sit amet
+                      consectetur adipisicing elit. Nisi ab repellat facere ipsam, accusantium deserunt molestiae? Rerum
+                      nesciunt autem temporibus facilis dicta. Molestias quo assumenda omnis esse tempore totam atque.
+                      Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi ab repellat facere ipsam,
+                      accusantium deserunt molestiae? Rerum nesciunt autem temporibus facilis dicta. Molestias quo
+                      assumenda omnis esse tempore totam atque. Rerum nesciunt autem temporibus
+                      facilis dicta. Molestias quo assumenda omnis esse tempore totam atque. Lorem ipsum dolor sit amet
+                      consectetur adipisicing elit. Nisi ab repellat facere ipsam, accusantium deserunt molestiae? Rerum
+                      nesciunt autem temporibus facilis dicta. Molestias quo assumenda omnis esse tempore totam atque.
+                      Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi ab repellat facere ipsam,
+                      accusantium deserunt molestiae? Rerum nesciunt autem temporibus facilis dicta. Molestias quo
+                      assumenda omnis esse tempore totam atque."
+                    />
+                  </AccordionContents>
                 </AccordionItem>
               </Accordion>
+
+              <Accordion>
+                <AccordionItem title="Task Revision from User">
+                  <AccordionContents>
+                    <AccordionContentItem
+                      index={1}
+                      date="01-04-23"
+                      time="11:22 AM"
+                      text=" Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi ab repellat facere ipsam,
+                      accusantium deserunt molestiae? Rerum nesciunt autem temporibus facilis dicta. Molestias quo
+                      assumenda omnis esse tempore totam atque. Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                      Nisi ab repellat facere ipsam, accusantium deserunt molestiae? repellat facere ipsam, accusantium deserunt molestiae? Rerum nesciunt autem temporibus
+                      facilis dicta. Molestias quo assumenda omnis esse tempore totam atque. Lorem ipsum dolor sit amet
+                      consectetur adipisicing elit. Nisi ab repellat facere ipsam, accusantium deserunt molestiae? Rerum
+                      nesciunt autem temporibus facilis dicta. Molestias quo assumenda omnis esse tempore totam atque.
+                      Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi ab repellat facere ipsam,
+                      accusantium deserunt molestiae? Rerum nesciunt autem temporibus facilis dicta. Molestias quo
+                      assumenda omnis esse tempore totam atque. repellat facere ipsam, accusantium deserunt molestiae? Rerum nesciunt autem temporibus
+                      facilis dicta. Molestias quo assumenda omnis esse tempore totam atque. Lorem ipsum dolor sit amet
+                      consectetur adipisicing elit. Nisi ab repellat facere ipsam, accusantium deserunt molestiae? Rerum
+                      nesciunt autem temporibus facilis dicta. Molestias quo assumenda omnis esse tempore totam atque.
+                      Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi ab repellat facere ipsam,
+                      accusantium deserunt molestiae? Rerum nesciunt autem temporibus facilis dicta. Molestias quo
+                      assumenda omnis esse tempore totam atque. Rerum nesciunt autem temporibus
+                      facilis dicta. Molestias quo assumenda omnis esse tempore totam atque. Lorem ipsum dolor sit amet
+                      consectetur adipisicing elit. Nisi ab repellat facere ipsam, accusantium deserunt molestiae? Rerum
+                      nesciunt autem temporibus facilis dicta. Molestias quo assumenda omnis esse tempore totam atque.
+                      Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi ab repellat facere ipsam,
+                      accusantium deserunt molestiae? Rerum nesciunt autem temporibus facilis dicta. Molestias quo
+                      assumenda omnis esse tempore totam atque."
+                    />
+
+                    <AccordionContentItem
+                      index={2}
+                      date="01-04-23"
+                      time="11:22 AM"
+                      text=" Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi ab repellat facere ipsam,
+                      accusantium deserunt molestiae? Rerum nesciunt autem temporibus facilis dicta. Molestias quo
+                      assumenda omnis esse tempore totam atque. Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                      Nisi ab repellat facere ipsam, accusantium deserunt molestiae? repellat facere ipsam, accusantium deserunt molestiae? Rerum nesciunt autem temporibus
+                      facilis dicta. Molestias quo assumenda omnis esse tempore totam atque. Lorem ipsum dolor sit amet
+                      consectetur adipisicing elit. Nisi ab repellat facere ipsam, accusantium deserunt molestiae? Rerum
+                      nesciunt autem temporibus facilis dicta. Molestias quo assumenda omnis esse tempore totam atque.
+                      Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi ab repellat facere ipsam,
+                      accusantium deserunt molestiae? Rerum nesciunt autem temporibus facilis dicta. Molestias quo
+                      assumenda omnis esse tempore totam atque. repellat facere ipsam, accusantium deserunt molestiae? Rerum nesciunt autem temporibus
+                      facilis dicta. Molestias quo assumenda omnis esse tempore totam atque. Lorem ipsum dolor sit amet
+                      consectetur adipisicing elit. Nisi ab repellat facere ipsam, accusantium deserunt molestiae? Rerum
+                      nesciunt autem temporibus facilis dicta. Molestias quo assumenda omnis esse tempore totam atque.
+                      Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi ab repellat facere ipsam,
+                      accusantium deserunt molestiae? Rerum nesciunt autem temporibus facilis dicta. Molestias quo
+                      assumenda omnis esse tempore totam atque. Rerum nesciunt autem temporibus
+                      facilis dicta. Molestias quo assumenda omnis esse tempore totam atque. Lorem ipsum dolor sit amet
+                      consectetur adipisicing elit. Nisi ab repellat facere ipsam, accusantium deserunt molestiae? Rerum
+                      nesciunt autem temporibus facilis dicta. Molestias quo assumenda omnis esse tempore totam atque.
+                      Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi ab repellat facere ipsam,
+                      accusantium deserunt molestiae? Rerum nesciunt autem temporibus facilis dicta. Molestias quo
+                      assumenda omnis esse tempore totam atque."
+                    />
+                  </AccordionContents>
+                </AccordionItem>
+              </Accordion>
+
+              <GeneralGuideLine title={'Task Description'} />
             </div>
           </div>
         </div>
 
         {/* actions */}
-        <div className="col-span-12 md:col-span-3">
+        <div className="col-span-12 md:col-span-4">
           <TaskActions />
         </div>
       </div>

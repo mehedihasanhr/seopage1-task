@@ -1,30 +1,30 @@
 import React, { useState } from 'react';
+import { IoChevronBackCircleSharp, IoChevronDownCircleSharp } from 'react-icons/io5';
 
 export const AccordionItem = ({ title, children }) => {
   const [open, setOpen] = useState(false);
-  const [expend, setExpend] = useState(false);
+
   return (
-    <div className="flex flex-col shadow-lg rounded-b-lg">
+    <>
       <div
-        className={`py-3 px-3 bg-[#E33E4F] text-white ${open ? 'rounded-t-lg' : 'rounded-lg'}`}
+        className={`py-2.5 px-4 bg-red-500 text-white flex items-center justify-between ${
+          open ? 'rounded-t-lg' : 'rounded-lg'
+        }`}
         onClick={() => setOpen(!open)}
       >
         {title}
+        <div className={`w-fit h-fit rounded-full ${open ? 'rotate-[180deg]' : ''}`}>
+          <IoChevronDownCircleSharp className="text-3xl text-[#fff]" />
+        </div>
       </div>
       <div
-        className="duration-300 ease-in-out"
-        style={{
-          height: open ? (expend ? '500px ' : '300px') : 0,
-          overflowY: open ? 'auto' : 'hidden',
-          padding: open ? '1rem' : '0 1rem',
-          transform: 'transition: height 0.3s ease-in-out',
-        }}
+        className={`flex flex-col gap-4 ${
+          open ? 'h-[500px] shadow-lg rounded-b-lg' : 'h-0 overflow-hidden'
+        } transition-all duration-150`}
       >
-        {React.Children.map(children, (child, i) => {
-          return React.cloneElement(child, { expend, setExpend });
-        })}
+        {children}
       </div>
-    </div>
+    </>
   );
 };
 
