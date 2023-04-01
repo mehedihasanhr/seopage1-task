@@ -22,7 +22,7 @@ const TaskActions = () => {
                 <td className="py-2 pl-2">28-02-2023</td>
               </tr>
               <tr>
-                <td className="py-2 pr-2">Due:</td>
+                <td className="py-2 pr-2">Due Date:</td>
                 <td className="py-2 pl-2">28-02-2023</td>
               </tr>
               <tr>
@@ -124,10 +124,10 @@ const TaskActions = () => {
       </TaskActionCard>
 
       {/* History  */}
-      <TaskActionCard title="History">
-        <TaskActionCardItem text="123456kufvbuialehnlamwe" showEditButton={false} showPreviewButton={false} />
-        <TaskActionCardItem text="123456kufvbuialehnlamwe" showEditButton={false} showPreviewButton={false} />
-        <TaskActionCardItem text="123456kufvbuialehnlamwe" showEditButton={false} showPreviewButton={false} />
+      <TaskActionCard title="History" scrollHeight={120}>
+        {[...Array(7)].map((_, i) => (
+          <TaskActionCardItem key={i} text="123456kufvbuialehnlamwe" showEditButton={false} showPreviewButton={false} />
+        ))}
       </TaskActionCard>
     </div>
   );

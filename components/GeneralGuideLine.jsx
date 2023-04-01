@@ -1,42 +1,40 @@
-import Link from 'next/link';
+import { useState } from 'react';
 import AccordionContentItem from './AccordionContentItem';
 import AccordionContents from './AccordionContents';
+import Link from 'next/link';
+import Button from './Button';
 
-const GeneralGuideLine = ({ title }) => {
+const GeneralGuideLine = ({ title, text = '' }) => {
+  const [expend, setExpend] = useState(false);
+
+  const handleExpend = (e) => {
+    e.preventDefault();
+    setExpend(true);
+  };
+
   return (
     <div>
       <div className="p-3 rounded-t-lg bg-blue-50">
         <span>{title}</span>
       </div>
 
-      <div className="flex flex-col gap-3 shadow-lg rounded-b-lg py-4">
-        <AccordionContents>
-          <AccordionContentItem
-            index={1}
-            text=" Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi ab repellat facere ipsam,
-                      accusantium deserunt molestiae? Rerum nesciunt autem temporibus facilis dicta. Molestias quo
-                      assumenda omnis esse tempore totam atque. Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                      Nisi ab repellat facere ipsam, accusantium deserunt molestiae? repellat facere ipsam, accusantium deserunt molestiae? Rerum nesciunt autem temporibus
-                      facilis dicta. Molestias quo assumenda omnis esse tempore totam atque. Lorem ipsum dolor sit amet
-                      consectetur adipisicing elit. Nisi ab repellat facere ipsam, accusantium deserunt molestiae? Rerum
-                      nesciunt autem temporibus facilis dicta. Molestias quo assumenda omnis esse tempore totam atque.
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi ab repellat facere ipsam,
-                      accusantium deserunt molestiae? Rerum nesciunt autem temporibus facilis dicta. Molestias quo
-                      assumenda omnis esse tempore totam atque. repellat facere ipsam, accusantium deserunt molestiae? Rerum nesciunt autem temporibus
-                      facilis dicta. Molestias quo assumenda omnis esse tempore totam atque. Lorem ipsum dolor sit amet
-                      consectetur adipisicing elit. Nisi ab repellat facere ipsam, accusantium deserunt molestiae? Rerum
-                      nesciunt autem temporibus facilis dicta. Molestias quo assumenda omnis esse tempore totam atque.
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi ab repellat facere ipsam,
-                      accusantium deserunt molestiae? Rerum nesciunt autem temporibus facilis dicta. Molestias quo
-                      assumenda omnis esse tempore totam atque. Rerum nesciunt autem temporibus
-                      facilis dicta. Molestias quo assumenda omnis esse tempore totam atque. Lorem ipsum dolor sit amet
-                      consectetur adipisicing elit. Nisi ab repellat facere ipsam, accusantium deserunt molestiae? Rerum
-                      nesciunt autem temporibus facilis dicta. Molestias quo assumenda omnis esse tempore totam atque.
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi ab repellat facere ipsam,
-                      accusantium deserunt molestiae? Rerum nesciunt autem temporibus facilis dicta. Molestias quo
-                      assumenda omnis esse tempore totam atque."
-          />
-        </AccordionContents>
+      <div className="p-4 text-sm">
+        {expend ? text : text.slice(0, 700)}
+        {expend ? null : (
+          <Link href="/" className="text-blue-500 ml-2" onClick={handleExpend}>
+            Read full guideline
+          </Link>
+        )}
+
+        {expend ? (
+          <Button
+            type="button"
+            className="border-none bg-blue-50 text-blue-500 w-fit ml-auto"
+            onClick={() => setExpend(false)}
+          >
+            Close
+          </Button>
+        ) : null}
       </div>
     </div>
   );

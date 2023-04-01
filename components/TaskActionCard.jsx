@@ -1,7 +1,8 @@
 import { AiOutlinePlus } from 'react-icons/ai';
 import { IoChevronBackCircleSharp } from 'react-icons/io5';
 import Link from 'next/link';
-import PerfectScrollbar from 'react-perfect-scrollbar';
+import dynamic from 'next/dynamic';
+const CustomScrollbar = dynamic(() => import('./CustomScrollbar'), { ssr: false });
 
 const TaskActionCard = ({ href = '/', children, linkText, title, leftChevronIcon = true, scrollHeight = 100 }) => {
   return (
@@ -15,7 +16,7 @@ const TaskActionCard = ({ href = '/', children, linkText, title, leftChevronIcon
       <div className="h-[160px] overflow-hidden thin-scrollbar pl-6">
         <div className="overflow-hidden">
           {/* Card title */}
-          <div className="flex flex-col text-[#283151]">
+          <div className="flex flex-col text-[#283151] pb-2">
             <span className="font-medium text-sm block aline-center py-1">{title}</span>
             {linkText ? (
               <Link
@@ -28,13 +29,9 @@ const TaskActionCard = ({ href = '/', children, linkText, title, leftChevronIcon
           </div>
           {/* card body */}
 
-          <>
-            <div style={{ height: scrollHeight }}>
-              <PerfectScrollbar>
-                <div className="pr-3">{children}</div>
-              </PerfectScrollbar>
-            </div>
-          </>
+          <CustomScrollbar minH={100} maxH={scrollHeight}>
+            <div className="pr-3">{children}</div>
+          </CustomScrollbar>
         </div>
       </div>
     </div>
