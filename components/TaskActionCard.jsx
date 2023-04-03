@@ -4,7 +4,22 @@ import Link from 'next/link';
 import dynamic from 'next/dynamic';
 const CustomScrollbar = dynamic(() => import('./CustomScrollbar'), { ssr: false });
 
-const TaskActionCard = ({ href = '/', children, linkText, title, leftChevronIcon = true, scrollHeight = 100 }) => {
+const TaskActionCard = ({
+  href = '/',
+  onAddButtonClick,
+  children,
+  linkText,
+  title,
+  leftChevronIcon = true,
+  scrollHeight = 100,
+}) => {
+  // handle link click
+  const handleLinkClick = (e) => {
+    if (!onAddButtonClick) return;
+    e.preventDefault();
+    onAddButtonClick();
+  };
+
   return (
     <div className="rounded-md p-3 pr-2 bg-white h-[200px] relative">
       {/* left chevron */}
@@ -21,6 +36,7 @@ const TaskActionCard = ({ href = '/', children, linkText, title, leftChevronIcon
             {linkText ? (
               <Link
                 href={href}
+                onClick={handleLinkClick}
                 className="flex items-center gap-1.5 text-sm text-[#1D82F5] py-2 border-b-[2px] last:border-b-0 border-[#E7EFFC] mr-4"
               >
                 <AiOutlinePlus className="text-base" /> {linkText}

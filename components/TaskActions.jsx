@@ -2,8 +2,11 @@ import Image from 'next/image';
 import React from 'react';
 import TaskActionCard from './TaskActionCard';
 import TaskActionCardItem from './TaskActionCardItem';
+import CommentEditorModal from './ModalWrapper/CommentEditorModal';
 
 const TaskActions = () => {
+  const [commentModalIsOpen, setCommentModalIsOpen] = React.useState(false);
+
   return (
     <div className="bg-[#E7EFFC] p-4 rounded-lg flex flex-col gap-4">
       {/* doing */}
@@ -39,11 +42,19 @@ const TaskActions = () => {
       </div>
 
       {/* Comment card */}
-      <TaskActionCard title="Comment" href="/" linkText="Add Comment">
-        <TaskActionCardItem text="123456kufvbuialehnlamwe" />
-        <TaskActionCardItem text="123456kufvbuialehnlamwe" />
-        <TaskActionCardItem text="123456kufvbuialehnlamwe" />
-      </TaskActionCard>
+      <>
+        <TaskActionCard
+          title="Comment"
+          href="/"
+          linkText="Add Comment"
+          onAddButtonClick={() => setCommentModalIsOpen(true)}
+        >
+          <TaskActionCardItem text="123456kufvbuialehnlamwe" />
+          <TaskActionCardItem text="123456kufvbuialehnlamwe" />
+          <TaskActionCardItem text="123456kufvbuialehnlamwe" />
+        </TaskActionCard>
+        <CommentEditorModal isOpen={commentModalIsOpen} close={() => setCommentModalIsOpen(false)} />
+      </>
       {/* Sub task card */}
       <TaskActionCard title="Sub Task" href="/" linkText="Add Sub Task" leftChevronIcon={false}>
         <TaskActionCardItem text="123456kufvbuialehnlamwe" />
