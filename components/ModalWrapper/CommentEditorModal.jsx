@@ -7,7 +7,7 @@ import { CiSquarePlus } from 'react-icons/ci';
 import Button from '../Button';
 import dynamic from 'next/dynamic';
 import CustomScrollbar from '../CustomScrollbar';
-const RichEditor = dynamic(() => import('../Editor/Editor'), { ssr: false });
+import RichEditor from '../Editor/Editor';
 
 const CommentEditorModal = ({ isOpen, close }) => {
   const [attachFiles, setAttachFiles] = React.useState([]);
@@ -32,9 +32,9 @@ const CommentEditorModal = ({ isOpen, close }) => {
           <Image src="/icons/avatar1.png" alt="" width={72} height={72} className="rounded-full" />
         </div>
 
-        <CustomScrollbar>
+        <CustomScrollbar maxH={455}>
           <div className="flex-1 flex flex-col gap-5 pr-4">
-            <div className="">{RichEditor && <RichEditor data={editorData} onChange={(d) => setEditorData(d)} />}</div>
+            <div className="h-[300px] border-b overflow-y-auto">{RichEditor && <RichEditor />}</div>
 
             {/* attach files sections */}
             <div className="flex flex-col gap-3">
