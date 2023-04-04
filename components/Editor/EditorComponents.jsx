@@ -120,15 +120,16 @@ export const Toolbar = React.forwardRef(({ className, ...props }, ref) => (
   <Menu
     {...props}
     ref={ref}
-    className={cx(
+    className={`flex flex-wrap ${cx(
       className,
       css`
+        width: 100%;
         position: relative;
-        padding: 1px 18px 17px;
+        padding: 10px 18px 10px;
         margin: 0 -20px;
         border-bottom: 2px solid #eee;
-        margin-bottom: 20px;
+        margin-bottom: 10px;
       `,
-    )}
+    )}`}
   />
 ));

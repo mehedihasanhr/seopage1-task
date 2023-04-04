@@ -1,12 +1,24 @@
 import React, { useCallback, useMemo, useState } from 'react';
+import isUrl from 'is-url';
+import imageExtensions from 'image-extensions';
 import isHotkey from 'is-hotkey';
-import { Editable, withReact, useSlate, Slate, useSelected } from 'slate-react';
+import {
+  Editable,
+  withReact,
+  useSlate,
+  Slate,
+  useSelected,
+  useSlateStatic,
+  ReactEditor,
+  useFocused,
+} from 'slate-react';
 import { Editor, Transforms, createEditor, Descendant, Element as SlateElement, Range } from 'slate';
 import { withHistory } from 'slate-history';
 
 import { cx, css } from '@emotion/css';
 
 import { Button, Icon, Toolbar } from './EditorComponents';
+import CustomScrollbar from '../CustomScrollbar';
 
 const HOTKEYS = {
   'mod+b': 'bold',
@@ -24,10 +36,10 @@ const RichTextExample = () => {
   // const [value, setValue] = useState([{ type: 'paragraph', children: [{ text: '' }] }]);
   const renderElement = useCallback((props) => <Element {...props} />, []);
   const renderLeaf = useCallback((props) => <Leaf {...props} />, []);
-  const editor = useMemo(() => withHistory(withReact(createEditor())), []);
+  const editor = useMemo(() => withImages(withInlines(withHistory(withReact(createEditor())))), []);
 
   return (
-    <div className="w-[95%]">
+    <div className="w-full md:w-[99%]">
       <Slate editor={editor} value={initialValue}>
         <Toolbar>
           <MarkButton format="bold" icon="format_bold" />
@@ -36,6 +48,7 @@ const RichTextExample = () => {
           <MarkButton format="code" icon="code" />
           <LinkButton format="link" icon="link" />
           <RemoveLinkButton format="link" icon="link_off" />
+          <InsertImageButton format="image" icon="image" />
           <BlockButton format="heading-one" icon="looks_one" />
           <BlockButton format="heading-two" icon="looks_two" />
           <BlockButton format="block-quote" icon="format_quote" />
@@ -46,28 +59,180 @@ const RichTextExample = () => {
           <BlockButton format="right" icon="format_align_right" />
           <BlockButton format="justify" icon="format_align_justify" />
         </Toolbar>
-        <Editable
-          renderElement={renderElement}
-          renderLeaf={renderLeaf}
-          placeholder="Enter some rich text…"
-          spellCheck
-          autoFocus={true}
-          selection={editor.selection}
-          onKeyDown={(event) => {
-            for (const hotkey in HOTKEYS) {
-              if (isHotkey(hotkey, event)) {
-                event.preventDefault();
-                const mark = HOTKEYS[hotkey];
-                toggleMark(editor, mark);
-              }
-            }
-          }}
-        />
+
+        <CustomScrollbar maxH={250}>
+          <div className="pr-3">
+            <Editable
+              renderElement={renderElement}
+              renderLeaf={renderLeaf}
+              placeholder="Enter some rich text…"
+              spellCheck
+              autoFocus={true}
+              className="pt-5 pb-10 text-sm md:text-base"
+              selection={editor.selection}
+              onKeyDown={(event) => {
+                for (const hotkey in HOTKEYS) {
+                  if (isHotkey(hotkey, event)) {
+                    event.preventDefault();
+                    const mark = HOTKEYS[hotkey];
+                    toggleMark(editor, mark);
+                  }
+                }
+              }}
+            />
+          </div>
+        </CustomScrollbar>
       </Slate>
     </div>
   );
 };
 
+// with images
+const withImages = (editor) => {
+  const { insertData, isVoid } = editor;
+
+  editor.isVoid = (element) => {
+    return element.type === 'image' ? true : isVoid(element);
+  };
+
+  editor.insertData = (data) => {
+    const text = data.getData('text/plain');
+    const { files } = data;
+
+    if (files && files.length > 0) {
+      for (const file of files) {
+        const reader = new FileReader();
+        const [mime] = file.type.split('/');
+
+        if (mime === 'image') {
+          reader.addEventListener('load', () => {
+            const url = reader.result;
+            insertImage(editor, url);
+          });
+
+          reader.readAsDataURL(file);
+        }
+      }
+    } else if (isImageUrl(text)) {
+      insertImage(editor, text);
+    } else {
+      insertData(data);
+    }
+  };
+
+  return editor;
+};
+
+// with inline
+const withInlines = (editor) => {
+  const { insertData, insertText, isInline, isElementReadOnly, isSelectable } = editor;
+
+  editor.isInline = (element) => ['link', 'button', 'badge'].includes(element.type) || isInline(element);
+
+  editor.isElementReadOnly = (element) => element.type === 'badge' || isElementReadOnly(element);
+
+  editor.isSelectable = (element) => element.type !== 'badge' && isSelectable(element);
+
+  editor.insertText = (text) => {
+    if (text && isUrl(text)) {
+      wrapLink(editor, text);
+    } else {
+      insertText(text);
+    }
+  };
+
+  editor.insertData = (data) => {
+    const text = data.getData('text/plain');
+
+    if (text && isUrl(text)) {
+      wrapLink(editor, text);
+    } else {
+      insertData(data);
+    }
+  };
+
+  return editor;
+};
+
+//image insert
+const insertImage = (editor, url) => {
+  const text = { text: '' };
+  const image = { type: 'image', url, children: [text] };
+  Transforms.insertNodes(editor, image);
+};
+
+// image render
+const Image = ({ attributes, children, element }) => {
+  const editor = useSlateStatic();
+  const path = ReactEditor.findPath(editor, element);
+
+  const selected = useSelected();
+  const focused = useFocused();
+  return (
+    <div {...attributes}>
+      {children}
+      <div
+        contentEditable={false}
+        className={css`
+          position: relative;
+        `}
+      >
+        <img
+          src={element.url}
+          className={css`
+            display: block;
+            max-width: 100%;
+            max-height: 20em;
+            box-shadow: ${selected && focused ? '0 0 0 3px #B4D5FF' : 'none'};
+          `}
+        />
+        <Button
+          active
+          onClick={() => Transforms.removeNodes(editor, { at: path })}
+          className={css`
+            display: ${selected && focused ? 'inline' : 'none'};
+            position: absolute;
+            top: 0.5em;
+            left: 0.5em;
+            background-color: white;
+          `}
+        >
+          <Icon>delete</Icon>
+        </Button>
+      </div>
+    </div>
+  );
+};
+
+// image insert button
+const InsertImageButton = () => {
+  const editor = useSlateStatic();
+  return (
+    <Button
+      onMouseDown={(event) => {
+        event.preventDefault();
+        const url = window.prompt('Enter the URL of the image:');
+        if (url && !isImageUrl(url)) {
+          alert('URL is not an image');
+          return;
+        }
+        url && insertImage(editor, url);
+      }}
+    >
+      <Icon>image</Icon>
+    </Button>
+  );
+};
+
+// check if the url is image url
+const isImageUrl = (url) => {
+  if (!url) return false;
+  if (!isUrl(url)) return false;
+  const ext = new URL(url).pathname.split('.').pop();
+  return imageExtensions.includes(ext);
+};
+
+// toogle blocks
 const toggleBlock = (editor, format) => {
   const isActive = isBlockActive(editor, format, TEXT_ALIGN_TYPES.includes(format) ? 'align' : 'type');
   const isList = LIST_TYPES.includes(format);
@@ -108,7 +273,7 @@ const toggleMark = (editor, format) => {
   }
 };
 
-//
+// is block active
 const isBlockActive = (editor, format, property = 'type') => {
   const [match] = Editor.nodes(editor, {
     match: (n) => !Editor.isEditor(n) && SlateElement.isElement(n) && n[property] === format,
@@ -122,6 +287,7 @@ const isMarkActive = (editor, format) => {
   return marks ? marks[format] === true : false;
 };
 
+// blockButtons
 const BlockButton = ({ format, icon }) => {
   const editor = useSlate();
   return (
@@ -137,6 +303,7 @@ const BlockButton = ({ format, icon }) => {
   );
 };
 
+// mark button
 const MarkButton = ({ format, icon }) => {
   const editor = useSlate();
   return (
@@ -220,7 +387,9 @@ const Link = React.forwardRef(({ attributes, children, element, style }, ref) =>
   const selected = useSelected();
   return (
     <a {...attributes} href={element.url} ref={ref} style={style} className="inline">
+      <InlineChromiumBugfix />
       {children}
+      <InlineChromiumBugfix />
     </a>
   );
 });
@@ -297,7 +466,8 @@ const Element = ({ attributes, children, element }) => {
 
     case 'link':
       return <Link style={style} {...attributes} element={element} children={children} />;
-
+    case 'image':
+      return <Image style={style} {...attributes} element={element} children={children} />;
     default:
       return (
         <p style={style} {...attributes}>

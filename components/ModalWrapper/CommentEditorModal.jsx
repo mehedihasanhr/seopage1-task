@@ -8,6 +8,7 @@ import Button from '../Button';
 import dynamic from 'next/dynamic';
 import CustomScrollbar from '../CustomScrollbar';
 import RichEditor from '../Editor/Editor';
+import { isMobile } from '@/utils/isMobileDevice';
 
 const CommentEditorModal = ({ isOpen, close }) => {
   const [attachFiles, setAttachFiles] = React.useState([]);
@@ -27,14 +28,14 @@ const CommentEditorModal = ({ isOpen, close }) => {
 
   return (
     <Modal isOpen={isOpen} close={close}>
-      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex gap-5 bg-white w-full max-w-[750px] max-h-[600px] rounded-lg p-4">
+      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col md:flex-row gap-5 bg-white w-full h-full max-w-[750px] md:max-h-[500px] md:rounded-lg p-4">
         <div>
           <Image src="/icons/avatar1.png" alt="" width={72} height={72} className="rounded-full" />
         </div>
 
         <CustomScrollbar maxH={455}>
-          <div className="flex-1 flex flex-col gap-5 pr-4">
-            <div className="h-[300px] border-b overflow-y-auto">{RichEditor && <RichEditor />}</div>
+          <div className="flex-1 flex flex-col gap-5 md:pr-4">
+            <div className="border px-2 w-full min-h-[300px]">{RichEditor && <RichEditor />}</div>
 
             {/* attach files sections */}
             <div className="flex flex-col gap-3">

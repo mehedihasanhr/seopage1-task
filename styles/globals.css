@@ -40,4 +40,8 @@
   ol {
     @apply list-decimal list-inside;
   }
+
+  code{
+    @apply bg-zinc-100 font-mono px-2 rounded-sm
+  }
 }
