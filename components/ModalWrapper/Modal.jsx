@@ -12,26 +12,26 @@ const Modal = ({ isOpen, close, children, className }) => {
   }, []);
 
   // if click outside of child then close modal
-  // React.useEffect(() => {
-  //   let timeout;
-  //   const handleOutSideClick = (e) => {
-  //     if (modalRef.current && !modalRef.current.contains(e.target)) {
-  //       close();
-  //       clearTimeout(timeout);
-  //       window.addEventListener('click', handleOutSideClick);
-  //     }
-  //   };
+  React.useEffect(() => {
+    let timeout;
+    const handleOutSideClick = (e) => {
+      if (modalRef.current && !modalRef.current.contains(e.target)) {
+        close();
+        clearTimeout(timeout);
+        window.addEventListener('click', handleOutSideClick);
+      }
+    };
 
-  //   if (isOpen) {
-  //     timeout = setTimeout(() => {
-  //       window.addEventListener('click', handleOutSideClick);
-  //     }, 100);
-  //   }
-  //   return () => {
-  //     clearTimeout(timeout);
-  //     window.removeEventListener('click', handleOutSideClick);
-  //   };
-  // }, [isOpen]);
+    if (isOpen) {
+      timeout = setTimeout(() => {
+        window.addEventListener('click', handleOutSideClick);
+      }, 100);
+    }
+    return () => {
+      clearTimeout(timeout);
+      window.removeEventListener('click', handleOutSideClick);
+    };
+  }, [isOpen]);
 
   if (!isOpen || !render) return null;
 

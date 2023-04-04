@@ -1,5 +1,6 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import isUrl from 'is-url';
+import Html from 'slate-html-serializer';
 import imageExtensions from 'image-extensions';
 import isHotkey from 'is-hotkey';
 import {
@@ -19,6 +20,8 @@ import { cx, css } from '@emotion/css';
 
 import { Button, Icon, Toolbar } from './EditorComponents';
 import CustomScrollbar from '../CustomScrollbar';
+import { serialize } from '@/utils/Editor';
+import Dropdown from '../Dropdown';
 
 const HOTKEYS = {
   'mod+b': 'bold',
@@ -40,8 +43,21 @@ const RichTextExample = () => {
 
   return (
     <div className="w-full md:w-[99%]">
-      <Slate editor={editor} value={initialValue}>
+      <Slate
+        editor={editor}
+        value={initialValue}
+        onChange={(value) => {
+          const isAstChange = editor.operations.some((op) => 'set_selection' !== op.type);
+          if (isAstChange) {
+            // Save the value to Local Storage.
+            const content = JSON.stringify(value);
+            // localStorage.setItem('content', content);
+            // console.log(html.serialize(value));
+          }
+        }}
+      >
         <Toolbar>
+          <HeadingButtons />
           <MarkButton format="bold" icon="format_bold" />
           <MarkButton format="italic" icon="format_italic" />
           <MarkButton format="underline" icon="format_underlined" />
@@ -49,8 +65,6 @@ const RichTextExample = () => {
           <LinkButton format="link" icon="link" />
           <RemoveLinkButton format="link" icon="link_off" />
           <InsertImageButton format="image" icon="image" />
-          <BlockButton format="heading-one" icon="looks_one" />
-          <BlockButton format="heading-two" icon="looks_two" />
           <BlockButton format="block-quote" icon="format_quote" />
           <BlockButton format="numbered-list" icon="format_list_numbered" />
           <BlockButton format="bulleted-list" icon="format_list_bulleted" />
@@ -60,28 +74,30 @@ const RichTextExample = () => {
           <BlockButton format="justify" icon="format_align_justify" />
         </Toolbar>
 
-        <CustomScrollbar maxH={250}>
-          <div className="pr-3">
-            <Editable
-              renderElement={renderElement}
-              renderLeaf={renderLeaf}
-              placeholder="Enter some rich text…"
-              spellCheck
-              autoFocus={true}
-              className="pt-5 pb-10 text-sm md:text-base"
-              selection={editor.selection}
-              onKeyDown={(event) => {
-                for (const hotkey in HOTKEYS) {
-                  if (isHotkey(hotkey, event)) {
-                    event.preventDefault();
-                    const mark = HOTKEYS[hotkey];
-                    toggleMark(editor, mark);
+        <div className="w-full relative overflow-hidden">
+          <CustomScrollbar maxH={230}>
+            <div className="pr-3">
+              <Editable
+                renderElement={renderElement}
+                renderLeaf={renderLeaf}
+                placeholder="Enter some rich text…"
+                spellCheck
+                autoFocus={true}
+                className="pt-5 pb-10 text-sm md:text-base"
+                selection={editor.selection}
+                onKeyDown={(event) => {
+                  for (const hotkey in HOTKEYS) {
+                    if (isHotkey(hotkey, event)) {
+                      event.preventDefault();
+                      const mark = HOTKEYS[hotkey];
+                      toggleMark(editor, mark);
+                    }
                   }
-                }
-              }}
-            />
-          </div>
-        </CustomScrollbar>
+                }}
+              />
+            </div>
+          </CustomScrollbar>
+        </div>
       </Slate>
     </div>
   );
@@ -232,7 +248,7 @@ const isImageUrl = (url) => {
   return imageExtensions.includes(ext);
 };
 
-// toogle blocks
+// toggle blocks
 const toggleBlock = (editor, format) => {
   const isActive = isBlockActive(editor, format, TEXT_ALIGN_TYPES.includes(format) ? 'align' : 'type');
   const isList = LIST_TYPES.includes(format);
@@ -285,6 +301,38 @@ const isBlockActive = (editor, format, property = 'type') => {
 const isMarkActive = (editor, format) => {
   const marks = Editor.marks(editor);
   return marks ? marks[format] === true : false;
+};
+
+// heading dropdown
+const Heading = ({ format, index, setActiveHeader }) => {
+  const editor = useSlate();
+  return (
+    <Button
+      className="whitespace-nowrap"
+      active={isBlockActive(editor, format, TEXT_ALIGN_TYPES.includes(format) ? 'align' : 'type')}
+      onMouseDown={(event) => {
+        event.preventDefault();
+        toggleBlock(editor, format);
+        setActiveHeader(`H${index}`);
+      }}
+    >
+      Heading {index} (H{index})
+    </Button>
+  );
+};
+
+const HeadingButtons = () => {
+  const [active, setActive] = React.useState('Heading');
+  return (
+    <Dropdown>
+      <Dropdown.Toggle className={active === 'Heading' ? 'text-gray-400' : ''}>{active}</Dropdown.Toggle>
+      <Dropdown.Menu className="flex flex-col gap-1 p-3">
+        {['one', 'two', 'three', 'four', 'five', 'six'].map((c, i) => (
+          <Heading key={`heading-${Math.random()}`} format={`heading-${c}`} index={i + 1} setActiveHeader={setActive} />
+        ))}
+      </Dropdown.Menu>
+    </Dropdown>
+  );
 };
 
 // blockButtons
@@ -438,6 +486,30 @@ const Element = ({ attributes, children, element }) => {
         <h2 style={style} {...attributes}>
           {children}
         </h2>
+      );
+    case 'heading-three':
+      return (
+        <h3 style={style} {...attributes}>
+          {children}
+        </h3>
+      );
+    case 'heading-four':
+      return (
+        <h4 style={style} {...attributes}>
+          {children}
+        </h4>
+      );
+    case 'heading-five':
+      return (
+        <h5 style={style} {...attributes}>
+          {children}
+        </h5>
+      );
+    case 'heading-six':
+      return (
+        <h6 style={style} {...attributes}>
+          {children}
+        </h6>
       );
     case 'list-item':
       return (

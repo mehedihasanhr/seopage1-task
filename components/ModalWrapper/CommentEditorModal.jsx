@@ -28,14 +28,14 @@ const CommentEditorModal = ({ isOpen, close }) => {
 
   return (
     <Modal isOpen={isOpen} close={close}>
-      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col md:flex-row gap-5 bg-white w-full h-full max-w-[750px] md:max-h-[500px] md:rounded-lg p-4">
+      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col md:flex-row gap-5 bg-white w-full h-full max-w-[750px] md:max-h-[550px] md:rounded-lg p-4">
         <div>
           <Image src="/icons/avatar1.png" alt="" width={72} height={72} className="rounded-full" />
         </div>
 
-        <CustomScrollbar maxH={455}>
-          <div className="flex-1 flex flex-col gap-5 md:pr-4">
-            <div className="border px-2 w-full min-h-[300px]">{RichEditor && <RichEditor />}</div>
+        <CustomScrollbar maxH={500}>
+          <div className="flex-1 flex flex-col gap-5 md:pr-4 pb-10">
+            <div className="border px-2 w-full h-[280px] overflow-hidden">{RichEditor && <RichEditor />}</div>
 
             {/* attach files sections */}
             <div className="flex flex-col gap-3">
@@ -87,9 +87,14 @@ const CommentEditorModal = ({ isOpen, close }) => {
                   </div>
                 ))}
               </div>
-              <Button className="bg-[#1D82F5] hover:bg-blue-600 border-0 w-fit rounded-md text-white">
-                Add Comment
-              </Button>
+              <div className="flex items-center gap-2">
+                <Button className="bg-[#1D82F5] hover:bg-blue-600 border-0 w-fit rounded-md text-white">
+                  Add Comment
+                </Button>
+                <Button onClick={close} className="bg-black/80 hover:bg-black/90 border-0 w-fit rounded-md text-white">
+                  Close
+                </Button>
+              </div>
             </div>
           </div>
         </CustomScrollbar>

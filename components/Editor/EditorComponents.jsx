@@ -6,13 +6,13 @@ export const Button = React.forwardRef(({ className, active, reversed, ...props 
   <span
     {...props}
     ref={ref}
-    className={cx(
+    className={`hover:text-gray-500 ${cx(
       className,
       css`
         cursor: pointer;
-        color: ${reversed ? (active ? 'white' : '#aaa') : active ? 'black' : '#ccc'};
+        color: ${reversed ? (active ? 'white' : '#aaa') : active ? 'black' : '#bbb'};
       `,
-    )}
+    )}`}
   />
 ));
 
@@ -120,13 +120,12 @@ export const Toolbar = React.forwardRef(({ className, ...props }, ref) => (
   <Menu
     {...props}
     ref={ref}
-    className={`flex flex-wrap ${cx(
+    className={`w-full ${cx(
       className,
       css`
         width: 100%;
         position: relative;
-        padding: 10px 18px 10px;
-        margin: 0 -20px;
+        padding: 10px 18px 10px 0;
         border-bottom: 2px solid #eee;
         margin-bottom: 10px;
       `,
