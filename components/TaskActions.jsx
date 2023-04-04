@@ -3,9 +3,27 @@ import React from 'react';
 import TaskActionCard from './TaskActionCard';
 import TaskActionCardItem from './TaskActionCardItem';
 import CommentEditorModal from './ModalWrapper/CommentEditorModal';
+import CommentDetailsModal from './ModalWrapper/CommentDetailsModal';
+import { useDispatch, useSelector } from 'react-redux';
+import { closeModal, openModal } from '@/services/features/comment/modalControl';
 
 const TaskActions = () => {
-  const [commentModalIsOpen, setCommentModalIsOpen] = React.useState(false);
+  const { isOpen } = useSelector((state) => state.commentModal);
+  const [commentDetailsModalIsOpen, setCommentDetailsModalIsOpen] = React.useState(false);
+  const [commentDetailsButtonRef, setCommentDetailsButtonRef] = React.useState(null);
+  const dispatch = useDispatch();
+  
+
+  // open comment modal
+  const openCommentModal = (type) => {
+    console.log(type);
+    dispatch(openModal(type));
+  };
+
+  // close comment modal
+  const closeCommentModal = () => {
+    dispatch(closeModal());
+  };
 
   return (
     <div className="bg-[#E7EFFC] p-4 rounded-lg flex flex-col gap-4">
@@ -46,14 +64,22 @@ const TaskActions = () => {
         <TaskActionCard
           title="Comment"
           href="/"
+          ref={setCommentDetailsButtonRef}
           linkText="Add Comment"
-          onAddButtonClick={() => setCommentModalIsOpen(true)}
+          isOpen={commentDetailsModalIsOpen}
+          onAddButtonClick={() => openCommentModal('comment')}
+          onArrowClick={() => setCommentDetailsModalIsOpen(true)}
         >
           <TaskActionCardItem text="123456kufvbuialehnlamwe" />
           <TaskActionCardItem text="123456kufvbuialehnlamwe" />
           <TaskActionCardItem text="123456kufvbuialehnlamwe" />
         </TaskActionCard>
-        <CommentEditorModal isOpen={commentModalIsOpen} close={() => setCommentModalIsOpen(false)} />
+        <CommentEditorModal isOpen={isOpen} close={closeCommentModal} />
+        <CommentDetailsModal 
+          elementRef={commentDetailsButtonRef}
+          isOpen={commentDetailsModalIsOpen} 
+          close={() => setCommentDetailsModalIsOpen(false)} 
+        />
       </>
       {/* Sub task card */}
       <TaskActionCard title="Sub Task" href="/" linkText="Add Sub Task" leftChevronIcon={false}>

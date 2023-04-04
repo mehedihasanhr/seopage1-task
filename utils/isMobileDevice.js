@@ -5,3 +5,5 @@ export const isMobile = () => {
 
   return false;
 };
+
+export default isMobile;
