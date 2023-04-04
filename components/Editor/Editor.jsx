@@ -222,21 +222,92 @@ const Image = ({ attributes, children, element }) => {
 
 // image insert button
 const InsertImageButton = () => {
+  // const editor = useSlateStatic();
+  // return (
+  //   <Button
+  //     onMouseDown={(event) => {
+  //       event.preventDefault();
+  //       const url = window.prompt('Enter the URL of the image:');
+  //       if (url && !isImageUrl(url)) {
+  //         alert('URL is not an image');
+  //         return;
+  //       }
+  //       url && insertImage(editor, url);
+  //     }}
+  //   >
+  //     <Icon>image</Icon>
+  //   </Button>
+  // );
+
   const editor = useSlateStatic();
+  const [value, setValue] = React.useState('');
+  const [open, setOpen] = React.useState(false);
+  const [error, setError] = React.useState('');
+
+  const handleChange = (e) => {
+    let v = e.target.value;
+    if (!v) return;
+    setValue(v);
+  };
+
+  const submit = (e) => {
+    e.preventDefault();
+
+    if (value && !isImageUrl(value)) {
+      setError('URL is not an image');
+      return;
+    }
+    value && insertImage(editor, value);
+    setValue('');
+
+    setOpen(false);
+  };
+
+  const handleClose = (e) => {
+    e.preventDefault();
+    setOpen(false);
+  };
+
   return (
-    <Button
-      onMouseDown={(event) => {
-        event.preventDefault();
-        const url = window.prompt('Enter the URL of the image:');
-        if (url && !isImageUrl(url)) {
-          alert('URL is not an image');
-          return;
-        }
-        url && insertImage(editor, url);
-      }}
-    >
-      <Icon>image</Icon>
-    </Button>
+    <div className="relative">
+      <Button
+        onMouseDown={(event) => {
+          event.preventDefault();
+          setOpen(true);
+        }}
+      >
+        <Icon>image</Icon>
+      </Button>
+      {open && (
+        <div className="absolute top-full left-1/2 -translate-x-1/2 z-[1000] outline-none focus:border-blue-500 focus:outline-none px-4 pt-4 bg-white shadow-lg rounded-lg w-[250px]">
+          {error && <div className="text-xs text-red-500">{error}</div>}
+          <input
+            type="text"
+            value={value}
+            placeholder="Write URL here.."
+            onChange={handleChange}
+            className="py-2 px-2 border rounded-md w-full z-[1000]"
+          />
+
+          <div className="flex items-center gap-2 justify-end py-3">
+            <button
+              type="button"
+              onMouseDown={handleClose}
+              className="py-1 px-2 rounded-md bg-black/80 text-white hover:bg-black/90"
+            >
+              Close
+            </button>
+            <button
+              type="button"
+              onMouseDown={submit}
+              className="py-1 px-2 rounded-md bg-blue-500 text-white hover:bg-blue-600"
+            >
+              OK
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
   );
 };
 
@@ -402,20 +473,89 @@ const wrapLink = (editor, url) => {
 };
 
 // link
+// const LinkButton = ({ format, icon }) => {
+//   const editor = useSlate();
+//   return (
+//     <div>
+//       <Button
+//       active={isLinkActive(editor)}
+//       onMouseDown={(event) => {
+//         event.preventDefault();
+//         const url = window.prompt('Enter the URL of the link:');
+//         if (!url) return;
+//         wrapLink(editor, url);
+//       }}
+//     >
+//       <Icon>{icon}</Icon>
+//     </Button>
+//     </div>
+//   );
+// };
+
 const LinkButton = ({ format, icon }) => {
   const editor = useSlate();
+  const [value, setValue] = React.useState('');
+  const [open, setOpen] = React.useState(false);
+
+  const handleChange = (e) => {
+    let v = e.target.value;
+    if (!v) return;
+    setValue(v);
+  };
+
+  const submit = (e) => {
+    e.preventDefault();
+    wrapLink(editor, value);
+    setOpen(false);
+  };
+
+  const handleClose = (e) => {
+    e.preventDefault();
+    setOpen(false);
+  };
+
   return (
-    <Button
-      active={isLinkActive(editor)}
-      onMouseDown={(event) => {
-        event.preventDefault();
-        const url = window.prompt('Enter the URL of the link:');
-        if (!url) return;
-        wrapLink(editor, url);
-      }}
-    >
-      <Icon>{icon}</Icon>
-    </Button>
+    <div className="relative">
+      <Button
+        active={isLinkActive(editor)}
+        onMouseDown={(event) => {
+          event.preventDefault();
+          setOpen(true);
+
+          // const url = window.prompt('Enter the URL of the link:');
+        }}
+      >
+        <Icon>{icon}</Icon>
+      </Button>
+      {open && (
+        <div className="absolute top-full left-1/2 -translate-x-1/2 z-[1000] outline-none focus:border-blue-500 focus:outline-none px-4 pt-4 bg-white shadow-lg rounded-lg w-[250px]">
+          <input
+            type="text"
+            value={value}
+            placeholder="Write URL here.."
+            onChange={handleChange}
+            className="py-2 px-2 border rounded-md w-full z-[1000]"
+          />
+
+          <div className="flex items-center gap-2 justify-end py-3">
+            <button
+              type="button"
+              onMouseDown={handleClose}
+              className="py-1 px-2 rounded-md bg-black/80 text-white hover:bg-black/90"
+            >
+              Close
+            </button>
+            <button
+              type="button"
+              onMouseDown={submit}
+              className="py-1 px-2 rounded-md bg-blue-500 text-white hover:bg-blue-600"
+            >
+              OK
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
   );
 };
 

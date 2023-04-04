@@ -18,7 +18,7 @@ const Toggle = ({ children, className, icon = true }) => {
 };
 
 // menu
-const Menu = ({ children, className, placement = 'bottom-start', ...props }) => {
+const Menu = ({ children, className, selection = true, placement = 'bottom-start', ...props }) => {
   const { close, toggle, isOpen, refElement, popperElement, setPopperElement } = React.useContext(DropdownContext);
 
   const wrapperRef = React.useRef(null);
@@ -67,7 +67,7 @@ const Menu = ({ children, className, placement = 'bottom-start', ...props }) => 
             ref={setPopperElement}
             style={styles.popper}
             className={`overflow-hidden z-[1000] bg-white rounded-md shadow-lg ${className}`}
-            onMouseUp={close}
+            onMouseUp={selection ? null : close}
             {...attributes}
             {...props}
           >

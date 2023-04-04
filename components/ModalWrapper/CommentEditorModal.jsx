@@ -35,7 +35,7 @@ const CommentEditorModal = ({ isOpen, close }) => {
 
         <CustomScrollbar maxH={500}>
           <div className="flex-1 flex flex-col gap-5 md:pr-4 pb-10">
-            <div className="border px-2 w-full h-[280px] overflow-hidden">{RichEditor && <RichEditor />}</div>
+            <div className="border relative px-2 w-full h-[280px] overflow-hidden">{RichEditor && <RichEditor />}</div>
 
             {/* attach files sections */}
             <div className="flex flex-col gap-3">
